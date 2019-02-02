@@ -22,9 +22,14 @@ routes.use(authMiddleware);
 /**
  * CREDIT CARD
  */
-
 routes.post('/account/creditcard', controllers.creditCardController.create);
+routes.get('/account/creditcard', controllers.creditCardController.show);
+routes.delete('/account/creditcard/:id', controllers.creditCardController.destroy);
 
-// routes.get('/account', (req, res) => res.send(`OK-${req.userId}`));
+/**
+ * FAVOREDS CONTACTS
+ */
+routes.post('/account/favored', controllers.favoredController.create);
+routes.get('/account/favored', controllers.favoredController.show);
 
 module.exports = routes;

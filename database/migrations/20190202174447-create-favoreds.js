@@ -1,17 +1,17 @@
 module.exports = {
-  up: (queryInterface, DataTypes) => queryInterface.createTable('CreditCards', {
+  up: (queryInterface, DataTypes) => queryInterface.createTable('Favoreds', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    cardNumber: {
+    originClientId: {
       allowNull: false,
-      type: DataTypes.STRING,
-      unique: true,
+      type: DataTypes.INTEGER,
+      references: { model: 'clients', key: 'id' },
     },
-    clientId: {
+    favoredId: {
       allowNull: false,
       type: DataTypes.INTEGER,
       references: { model: 'clients', key: 'id' },
@@ -26,5 +26,5 @@ module.exports = {
     },
   }),
 
-  down: queryInterface => queryInterface.dropTable('CreditCards'),
+  down: queryInterface => queryInterface.dropTable('Favoreds'),
 };

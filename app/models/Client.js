@@ -23,7 +23,15 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Client.associate = (models) => {
-    Client.hasMany(models.CreditCard);
+    Client.hasMany(models.CreditCard, { foreignKey: 'clientId' });
+  };
+
+  Client.associate = (models) => {
+    Client.hasMany(models.Favored, { foreignKey: 'originClientId' });
+  };
+
+  Client.associate = (models) => {
+    Client.hasMany(models.Favored, { foreignKey: 'favoredId' });
   };
 
   // eslint-disable-next-line func-names

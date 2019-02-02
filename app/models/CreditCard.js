@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     cardNumber: DataTypes.STRING,
   });
 
-  // CreditCard.belongTo(Client);
   CreditCard.associate = (models) => {
     CreditCard.belongsTo(models.Client);
   };
