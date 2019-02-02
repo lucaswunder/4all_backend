@@ -19,6 +19,12 @@ routes.post('/login', controllers.authController.login);
  */
 routes.use(authMiddleware);
 
-routes.get('/account', (req, res) => res.send(`OK-${req.userId}`));
+/**
+ * CREDIT CARD
+ */
+
+routes.post('/account/creditcard', controllers.creditCardController.create);
+
+// routes.get('/account', (req, res) => res.send(`OK-${req.userId}`));
 
 module.exports = routes;

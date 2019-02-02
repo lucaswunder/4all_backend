@@ -18,7 +18,7 @@ module.exports = {
 
       return res.json({ client, token: client.generateToken() });
     } catch (err) {
-      return next();
+      return next(err);
     }
   },
   async signup(req, res, next) {

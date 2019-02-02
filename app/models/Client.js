@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
+  Client.associate = (models) => {
+    Client.hasMany(models.CreditCard);
+  };
+
   // eslint-disable-next-line func-names
   Client.prototype.checkPassword = function checkPassword(password) {
     return bcrypt.compare(password, this.password);
