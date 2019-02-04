@@ -16,7 +16,7 @@ module.exports = {
         return res.status(400).json({ error: 'Invalid' });
       }
 
-      return res.json({ client, token: client.generateToken() });
+      return res.json({ User: client.name, token: client.generateToken() });
     } catch (err) {
       return next(err);
     }
@@ -31,7 +31,7 @@ module.exports = {
 
       const client = await Client.create({ ...req.body });
 
-      return res.json({ client, token: client.generateToken() });
+      return res.json({ User: client.name, token: client.generateToken() });
     } catch (err) {
       return next(err);
     }

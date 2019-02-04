@@ -13,6 +13,7 @@ module.exports = {
 
       return res.json(creditCard);
     } catch (err) {
+      console.log(err);
       return next();
     }
   },
@@ -24,6 +25,13 @@ module.exports = {
           clientId: req.clientId,
         },
       });
+
+      // const clientCards = await Client.findAll({
+      //   include: [CreditCard],
+      //   where: {
+      //     id: req.clientId,
+      //   },
+      // });
 
       return res.json(creditCards);
     } catch (err) {

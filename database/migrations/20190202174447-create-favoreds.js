@@ -6,7 +6,7 @@ module.exports = {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    originClientId: {
+    clientId: {
       allowNull: false,
       type: DataTypes.INTEGER,
       references: { model: 'clients', key: 'id' },

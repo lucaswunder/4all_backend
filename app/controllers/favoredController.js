@@ -4,12 +4,11 @@ module.exports = {
   async create(req, res, next) {
     try {
       const { favoredId } = req.body;
-
       if (await Favored.findOne({ where: { favoredId } })) {
         return res.status(400).json('Favored already exists');
       }
 
-      const favored = await Favored.create({ originClientId: req.clientId, favoredId: 35 });
+      const favored = await Favored.create({ clientId: req.clientId, favoredId });
 
       return res.json(favored);
     } catch (err) {
@@ -19,16 +18,44 @@ module.exports = {
 
   async show(req, res, next) {
     try {
-      const favoreds = await Favored.findAll({
-        include: [Client],
-        where: {
-          originClientId: req.clientId,
-        },
-      });
+      // const fav = await Favored.findAll({
+      //   include: {
+      //     model: Client,
+      //     attributes: ['name', 'id'],
+      //     required: true,
+      //   },
+      //   where: {
+      //     favoredId: req.clientId,
+      //   },
+      //   attributes: ['clientId', 'favoredId', 'id'],
+      // });
 
+      // const cli = await Client.findAll({
+      //   include: {
+      //     model: Favored,
+      //     attributes: ['id', ['clientId', 'origin'], 'favoredId'],
+      //     include: [Client],
+      //     required: true,
+      //   },
+      //   where: { id: req.clientId },
+      // });
+
+      const favoreds = await Favored.findAll({
+        include: [
+          {
+            model: Client,
+            on: { '$favored.favoredId$': { $col: 'client.id' } },
+            required: true,
+            attributes: ['id', 'name', 'cpf'],
+          },
+        ],
+        where: {
+          clientId: req.clientId,
+        },
+        attributes: ['id', ['clientId', 'originId']],
+      });
       return res.json(favoreds);
     } catch (err) {
-      console.log(err);
       return next();
     }
   },
