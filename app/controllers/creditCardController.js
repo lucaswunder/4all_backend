@@ -5,15 +5,17 @@ module.exports = {
     try {
       const { cardNumber } = req.body;
 
-      if (await CreditCard.findOne({ where: { cardNumber } })) {
+      if (await CreditCard.findOne({ where: { cardNumber }, $or: [req.clientId] })) {
         return res.status(400).json('Card already exists');
       }
 
-      const creditCard = await CreditCard.create({ ...req.body, clientId: req.clientId });
+      const creditCard = await CreditCard.create({
+        cardNumber,
+        clientId: req.clientId,
+      });
 
       return res.json(creditCard);
     } catch (err) {
-      console.log(err);
       return next();
     }
   },
@@ -26,16 +28,8 @@ module.exports = {
         },
       });
 
-      // const clientCards = await Client.findAll({
-      //   include: [CreditCard],
-      //   where: {
-      //     id: req.clientId,
-      //   },
-      // });
-
       return res.json(creditCards);
     } catch (err) {
-      console.log(err);
       return next();
     }
   },

@@ -18,28 +18,6 @@ module.exports = {
 
   async show(req, res, next) {
     try {
-      // const fav = await Favored.findAll({
-      //   include: {
-      //     model: Client,
-      //     attributes: ['name', 'id'],
-      //     required: true,
-      //   },
-      //   where: {
-      //     favoredId: req.clientId,
-      //   },
-      //   attributes: ['clientId', 'favoredId', 'id'],
-      // });
-
-      // const cli = await Client.findAll({
-      //   include: {
-      //     model: Favored,
-      //     attributes: ['id', ['clientId', 'origin'], 'favoredId'],
-      //     include: [Client],
-      //     required: true,
-      //   },
-      //   where: { id: req.clientId },
-      // });
-
       const favoreds = await Favored.findAll({
         include: [
           {

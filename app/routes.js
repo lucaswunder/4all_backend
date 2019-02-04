@@ -32,4 +32,9 @@ routes.delete('/account/creditcard/:id', controllers.creditCardController.destro
 routes.post('/account/favored', controllers.favoredController.create);
 routes.get('/account/favored', controllers.favoredController.show);
 
+/**
+ * TRANSACTIONS
+ */
+routes.post('/account/transaction', controllers.transactionController.create);
+
 module.exports = routes;
