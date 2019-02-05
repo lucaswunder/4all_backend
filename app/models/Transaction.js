@@ -4,10 +4,12 @@ module.exports = (sequelize, DataTypes) => {
     clientOriginId: DataTypes.INTEGER,
     amount: DataTypes.STRING,
     createdAt: DataTypes.DATE,
+    creditCardId: DataTypes.INTEGER,
+    updatedAt: DataTypes.DATE,
   });
 
   Transaction.associate = (models) => {
-    // CreditCard.belongsTo(models.Client);
+    // reditCard.belongsTo(models.Client);
   };
 
   return Transaction;

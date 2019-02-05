@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       cpf: DataTypes.STRING,
       password: DataTypes.STRING,
+      balance: DataTypes.STRING,
     },
     {
       hooks: {

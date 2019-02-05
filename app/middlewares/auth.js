@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ error: 'No toke provided' });
+    return res.status(401).json({ error: 'No tokens provided' });
   }
 
   const parts = authHeader.split(' ');
