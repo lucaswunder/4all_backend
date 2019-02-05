@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const CreditCard = sequelize.define('CreditCard', {
-    cardNumber: DataTypes.STRING,
-    clientId: DataTypes.INTEGER,
+    cardNumber: { type: DataTypes.STRING },
+    clientId: { type: DataTypes.INTEGER },
   });
 
   CreditCard.associate = (models) => {

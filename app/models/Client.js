@@ -6,10 +6,13 @@ module.exports = (sequelize, DataTypes) => {
   const Client = sequelize.define(
     'Client',
     {
-      name: DataTypes.STRING,
-      cpf: DataTypes.STRING,
-      password: DataTypes.STRING,
-      balance: DataTypes.STRING,
+      name: { type: DataTypes.STRING },
+      cpf: { type: DataTypes.STRING },
+      password: { type: DataTypes.STRING },
+      balance: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       hooks: {
