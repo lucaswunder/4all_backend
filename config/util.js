@@ -8,6 +8,15 @@ module.exports = {
   },
 
   /**
+   * verifica se é numero
+   * @param {* var to check} num
+   */
+  checkNum(num) {
+    // eslint-disable-next-line no-restricted-globals
+    return isNaN(num);
+  },
+
+  /**
    * Verifica se objeto está vazio
    * @param {* Objeto} obj
    */

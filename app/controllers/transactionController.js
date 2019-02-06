@@ -178,7 +178,7 @@ module.exports = {
 
   async show(req, res, next) {
     try {
-      const transactions = await Transaction.findAll({
+      const transactionsSend = await Transaction.findAndCountAll({
         where: {
           clientOriginId: req.clientId,
         },
@@ -186,7 +186,17 @@ module.exports = {
         raw: true,
       });
 
-      return res.json(transactions);
+      const transactionsReceived = await Transaction.findAndCountAll({
+        where: {
+          clientReceivedId: req.clientId,
+        },
+        order: [['id', 'DESC']],
+        raw: true,
+      });
+
+      return transactionsSend.count === 0 && transactionsReceived.count === 0
+        ? res.status(400).json({ msg: 'no transfers were made on your account' })
+        : res.json({ transactionsReceived, transactionsSend });
     } catch (err) {
       return next();
     }

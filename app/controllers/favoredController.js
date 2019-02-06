@@ -1,10 +1,16 @@
+const { checkStr, checkNum } = require('../../config/util');
 const { Favored, Client } = require('../models');
 
 module.exports = {
   async create(req, res, next) {
     try {
       const { favoredId } = req.body;
-      if (await Favored.findOne({ where: { favoredId } })) {
+
+      if (checkStr(favoredId) || checkNum(favoredId)) {
+        return res.status(400).json({ error: 'Invalid id' });
+      }
+
+      if (await Favored.findOne({ where: { favoredId, clientId: req.clientId } })) {
         return res.status(400).json({ error: 'Favored already exists' });
       }
 
@@ -18,21 +24,23 @@ module.exports = {
 
   async show(req, res, next) {
     try {
-      const favoreds = await Favored.findAll({
+      const favoreds = await Favored.findAndCountAll({
         include: [
           {
             model: Client,
             on: { '$favored.favoredId$': { $col: 'client.id' } },
             required: true,
-            attributes: ['id', 'name', 'cpf'],
+            attributes: ['name', 'cpf'],
           },
         ],
         where: {
           clientId: req.clientId,
         },
-        attributes: ['id', ['clientId', 'originId']],
+        attributes: ['id'],
       });
-      return res.json(favoreds);
+      return favoreds.count === 0
+        ? res.json({ msg: 'no favoreds cards' })
+        : res.json(favoreds.rows);
     } catch (err) {
       return next();
     }
@@ -40,9 +48,13 @@ module.exports = {
 
   async destroy(req, res, next) {
     try {
-      await Favored.destroy({ where: { id: req.params.id } });
+      const favored = await Favored.destroy({
+        where: { id: req.params.id, clientId: req.clientId },
+      });
 
-      return res.json({ success: 'Favored deleted' });
+      return favored === 0
+        ? res.status(400).json({ error: 'Not found' })
+        : res.json({ success: 'Favored contact deleted' });
     } catch (err) {
       return next();
     }

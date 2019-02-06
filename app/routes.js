@@ -20,6 +20,12 @@ routes.post('/login', controllers.authController.login);
 routes.use(authMiddleware);
 
 /**
+ *  CLIENT
+ */
+
+routes.get('/account/client/balance', controllers.clientController.showBalance);
+
+/**
  * CREDIT CARD
  */
 routes.post('/account/creditcard', controllers.creditCardController.create);
