@@ -5,7 +5,7 @@ module.exports = {
     try {
       const { favoredId } = req.body;
       if (await Favored.findOne({ where: { favoredId } })) {
-        return res.status(400).json('Favored already exists');
+        return res.status(400).json({ error: 'Favored already exists' });
       }
 
       const favored = await Favored.create({ clientId: req.clientId, favoredId });
@@ -42,7 +42,7 @@ module.exports = {
     try {
       await Favored.destroy({ where: { id: req.params.id } });
 
-      return res.json('Favored deleted');
+      return res.json({ success: 'Favored deleted' });
     } catch (err) {
       return next();
     }

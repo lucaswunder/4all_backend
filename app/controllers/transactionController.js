@@ -17,11 +17,11 @@ module.exports = {
       const amountToTransfer = Number(req.body.amountToTransfer);
 
       if (creditCardId === '0') {
-        return res.status(400).json({ error: 'Invalid credit card', msg: 'choose another' });
+        return res.status(400).json({ error: 'Invalid credit card' });
       }
       // check if amount to transfer is > than 1000
       if (amountToTransfer > 1000 && !password) {
-        return res.status(400).json({ error: 'Greater than 1000', msg: 'Needs password' });
+        return res.status(400).json({ error: 'Greater than 1000 Needs password' });
       }
 
       needPassword = !!password;
@@ -38,7 +38,7 @@ module.exports = {
 
       // check if the user has enough money
       if (amountToTransfer > originClientBalance && !creditCardId) {
-        return res.status(400).json({ error: 'Without balance', msg: 'Use credit card to finish' });
+        return res.status(400).json({ error: 'Without balance , use credit card to finish' });
       }
 
       // If have client info
@@ -60,7 +60,7 @@ module.exports = {
 
       // If have info
       if (!receivedClient) {
-        return res.status(400).json('Check name and cpf of the destination');
+        return res.status(400).json({ error: 'Check name and cpf of the destination' });
       }
 
       // Get credit card information
@@ -74,7 +74,7 @@ module.exports = {
         // If the user not selects a valid credit card
         if (creditCard.id === 'null' || creditCardId === 0) {
           creditCard.id = null;
-          return res.status(400).json('Credit card not found');
+          return res.status(400).json({ error: 'Credit card not found' });
         }
       }
 
@@ -89,6 +89,10 @@ module.exports = {
 
       let duplicated = false;
 
+      /**
+       * If there is a previous transfer,
+       * it verifies the time elapsed between it and the current one
+       */
       if (lastClientTransaction) {
         const lastClientAmount = Number(lastClientTransaction.amount);
 
@@ -104,6 +108,10 @@ module.exports = {
         // duration = duration.asMinutes();
         duration = 1;
 
+        /**
+         * if the duration between, is less than 2 minutes and the data is the same.
+         * Cancels the previous transaction and proceeds to register the current transaction.
+         */
         if (
           duration <= 2
           && lastClientTransaction.clientReceivedId === receivedClient.id
@@ -118,17 +126,16 @@ module.exports = {
         }
       }
 
-      // Finish transaction
-      const registryTransaction = await Transaction.create({
-        clientReceivedId: receivedClient.id,
-        clientOriginId: originClient.id,
-        amount: amountToTransfer.toFixed(2),
-        creditCardId: creditCardId ? creditCard.id : null,
-      });
-
+      /** If the transaction was not duplicated,
+       *  the previous one has already been deleted and the current one
+       *  will be retained.
+       *  And the client funds will not be changed
+       *  as they have already been changed
+       *  in the excluded transaction.
+       */
       if (!duplicated) {
         /**
-         * Update received client balance
+         *  Update received client balance
          */
         const receivedClientBalance = Number(receivedClient.balance);
         const receivedClientBalanceSum = receivedClientBalance + amountToTransfer;
@@ -142,7 +149,7 @@ module.exports = {
 
         if (!needCreditCard) {
           /**
-           * Update Origin client balance
+           *  Update Origin client balance
            */
           const newOriginClientBalance = originClientBalance - amountToTransfer;
           // decrement balance
@@ -154,6 +161,14 @@ module.exports = {
           );
         }
       }
+
+      // Finish transaction
+      const registryTransaction = await Transaction.create({
+        clientReceivedId: receivedClient.id,
+        clientOriginId: originClient.id,
+        amount: amountToTransfer.toFixed(2),
+        creditCardId: creditCardId ? creditCard.id : null,
+      });
 
       return res.json({ registryTransaction });
     } catch (err) {
@@ -173,7 +188,6 @@ module.exports = {
 
       return res.json(transactions);
     } catch (err) {
-      console.log(err);
       return next();
     }
   },

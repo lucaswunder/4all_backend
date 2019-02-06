@@ -1,9 +1,15 @@
+const { checkStr } = require('../../config/util');
+
 const { Client } = require('../models');
 
 module.exports = {
   async login(req, res, next) {
     try {
       const { cpf, password } = req.body;
+
+      if (checkStr(cpf) || checkStr(password)) {
+        res.status(400).json({ error: 'Invalid CPF or Password' });
+      }
 
       const client = await Client.findOne({ where: { cpf } });
 
@@ -13,20 +19,28 @@ module.exports = {
 
       // eslint-disable-next-line
       if (!(await client.checkPassword(password))) {
-        return res.status(400).json({ error: 'Invalid' });
+        return res.status(400).json({ error: 'Client no found' });
       }
 
-      return res.json({ User: client.name, token: client.generateToken() });
+      return res.json({
+        User: client.name,
+        balance: client.balance,
+        token: client.generateToken(),
+      });
     } catch (err) {
       return next(err);
     }
   },
   async signup(req, res, next) {
     try {
-      const { cpf } = req.body;
+      const { cpf, name, password } = req.body;
+
+      if (checkStr(cpf) || checkStr(name) || checkStr(password)) {
+        return res.status(400).json({ error: 'Invalid CPF, Name or Password' });
+      }
 
       if (await Client.findOne({ where: { cpf } })) {
-        return res.status(400).json('Client already exists');
+        return res.status(400).json({ error: 'Client already exists' });
       }
 
       const client = await Client.create({ ...req.body });

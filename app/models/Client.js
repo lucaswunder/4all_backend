@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Client.prototype.generateToken = function generateToken() {
     return jwt.sign({ id: this.id }, authConfig.secret, {
-      expiresIn: 86400,
+      expiresIn: authConfig.expiresIn,
     });
   };
 
