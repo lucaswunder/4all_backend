@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      fone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       hooks: {

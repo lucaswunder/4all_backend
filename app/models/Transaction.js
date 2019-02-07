@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Transaction.associate = (models) => {
     // reditCard.belongsTo(models.Client);
+    Transaction.belongsTo(models.Client, { as: 'clientReceived', foreingKey: 'clientReceivedId' });
+    Transaction.belongsTo(models.Client, { as: 'clientOrigin', foreingKey: 'clientOriginId' });
   };
 
   return Transaction;

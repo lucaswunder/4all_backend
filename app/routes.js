@@ -24,6 +24,8 @@ routes.use(authMiddleware);
  */
 
 routes.get('/account/client/balance', controllers.clientController.showBalance);
+routes.get('/account/client', controllers.clientController.show);
+routes.put('/account/client', controllers.clientController.update);
 
 /**
  * CREDIT CARD
@@ -43,6 +45,14 @@ routes.delete('/account/favored/:id', controllers.favoredController.destroy);
  * TRANSACTIONS
  */
 routes.post('/account/transaction', controllers.transactionController.create);
-routes.get('/account/transaction', controllers.transactionController.show);
+routes.get('/account/transaction/send', controllers.transactionController.showSend);
+routes.get('/account/transaction/received', controllers.transactionController.showReceived);
+
+/**
+ * ROUTE NOT FOUND
+ */
+routes.use('/*', (req, res) => {
+  res.status(404).json('Not found');
+});
 
 module.exports = routes;

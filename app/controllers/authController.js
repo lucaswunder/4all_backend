@@ -33,10 +33,16 @@ module.exports = {
   },
   async signup(req, res, next) {
     try {
-      const { cpf, name, password } = req.body;
+      const {
+        cpf, name, password, fone,
+      } = req.body;
 
       if (checkStr(cpf) || checkStr(name) || checkStr(password)) {
         return res.status(400).json({ error: 'Invalid CPF, Name or Password' });
+      }
+
+      if (checkStr(fone) || fone.length > 11) {
+        return res.status(400).json({ error: 'Invalid fone number, send only digits' });
       }
 
       if (await Client.findOne({ where: { cpf } })) {

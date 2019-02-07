@@ -176,27 +176,51 @@ module.exports = {
     }
   },
 
-  async show(req, res, next) {
+  async showSend(req, res, next) {
     try {
-      const transactionsSend = await Transaction.findAndCountAll({
+      const transaction = await Transaction.findAndCountAll({
+        include: [
+          {
+            model: Client,
+            as: 'clientReceived',
+            required: true,
+            attributes: ['name', 'cpf'],
+          },
+        ],
         where: {
           clientOriginId: req.clientId,
         },
-        order: [['id', 'DESC']],
-        raw: true,
+        attributes: ['id', 'clientOriginId', 'clientReceivedId', 'amount', 'createdAt'],
       });
 
-      const transactionsReceived = await Transaction.findAndCountAll({
+      return transaction.count === 0
+        ? res.status(400).json({ msg: 'No transfers have been sent to your account' })
+        : res.json(transaction);
+    } catch (err) {
+      return next();
+    }
+  },
+
+  async showReceived(req, res, next) {
+    try {
+      const transaction = await Transaction.findAndCountAll({
+        include: [
+          {
+            model: Client,
+            as: 'clientOrigin',
+            required: true,
+            attributes: ['name', 'cpf'],
+          },
+        ],
         where: {
           clientReceivedId: req.clientId,
         },
-        order: [['id', 'DESC']],
-        raw: true,
+        attributes: ['id', 'clientOriginId', 'clientReceivedId', 'amount', 'createdAt'],
       });
 
-      return transactionsSend.count === 0 && transactionsReceived.count === 0
-        ? res.status(400).json({ msg: 'no transfers were made on your account' })
-        : res.json({ transactionsReceived, transactionsSend });
+      return transaction.count === 0
+        ? res.status(400).json({ msg: 'No transfers were made on your account' })
+        : res.json(transaction);
     } catch (err) {
       return next();
     }
