@@ -7,10 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon -e js,json"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lucaswunder/4all_backend.git"
-  },
   "keywords": [
     "bank",
     "api",
@@ -22,9 +18,9 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "eslint": "^5.12.1",
+    "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.15.0",
+    "eslint-plugin-import": "^2.16.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "moment": "^2.24.0",
