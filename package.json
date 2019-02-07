@@ -7,6 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon -e js,json"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucaswunder/4all_backend.git"
+  },
   "keywords": [
     "bank",
     "api",
