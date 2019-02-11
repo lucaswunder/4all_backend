@@ -1,5 +1,5 @@
 const { checkStr } = require("../../config/util");
-const { Client } = require("../models");
+const { Client, CreditCard, Favored } = require("../models");
 
 module.exports = {
   async showBalance(req, res, next) {
@@ -20,10 +20,22 @@ module.exports = {
 
   async show(req, res, next) {
     try {
-      const client = await Client.findByPk(req.clientId, {
-        attributes: ["id", "balance", "name", "cpf"]
+      const client2 = await Client.findByPk(req.clientId, {
+        attributes: ["id", "balance", "name", "cpf", "fone"],
+        raw: true
       });
 
+      const creditCards = await CreditCard.count({
+        where: { clientId: req.clientId }
+      });
+
+      const favoreds = await Favored.count({
+        where: { clientId: req.clientId }
+      });
+
+      const client = { ...client2, creditCards, favoreds };
+
+      console.log(client);
       if (!client) {
         return res.status(400).json("Not found");
       }
