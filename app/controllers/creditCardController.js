@@ -36,12 +36,31 @@ module.exports = {
       const creditCards = await CreditCard.findAndCountAll({
         where: {
           clientId: req.clientId
-        }
+        },
+        order: [["createdAt", "DESC"]],
+        attributes: ["id", "cardNumber", "createdAt"],
+        raw: true
       });
 
       return creditCards.count === 0
         ? res.json({ msg: "no credit cards" })
         : res.json(creditCards.rows);
+    } catch (err) {
+      return next();
+    }
+  },
+
+  async update(req, res, next) {
+    try {
+      const { cardNumber, id } = req.body;
+      const creditCard = await CreditCard.update(
+        { cardNumber },
+        { where: { id, clientId: req.clientId } }
+      );
+
+      return creditCard === 0
+        ? res.status(400).json({ error: "Not found" })
+        : res.json({ success: "Credit Card updated" });
     } catch (err) {
       return next();
     }
@@ -54,7 +73,7 @@ module.exports = {
       });
 
       return creditCard === 0
-        ? res.status(400).json({ error: "Not found" })
+        ? res.status(400).json({ error: "Not Deleted" })
         : res.json({ success: "Credit Card deleted" });
     } catch (err) {
       return next();
