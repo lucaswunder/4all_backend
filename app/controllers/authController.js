@@ -31,6 +31,7 @@ module.exports = {
       return next(err);
     }
   },
+
   async signup(req, res, next) {
     try {
       const {

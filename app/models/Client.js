@@ -30,11 +30,6 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
-  // Client.associate = (models) => {
-  //   // Client.hasMany(models.CreditCard, { foreignKey: 'clientId' });
-  //   // Client.hasMany(models.Favored, { foreignKey: 'favoredId' });
-  // };
-
   // eslint-disable-next-line func-names
   Client.prototype.checkPassword = function checkPassword(password) {
     return bcrypt.compare(password, this.password);
